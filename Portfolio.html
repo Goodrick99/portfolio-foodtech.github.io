@@ -1,0 +1,865 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Продуктовый кейс - B2B-платформа для пищевой индустрии</title>
+<meta name="description" content="B2B-платформа для юридических лиц пищевой индустрии. Поиск проверенных партнёров и поставщиков с проверкой документов." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    /* Светлая тёплая палитра */
+    --bg: #fbf8f3;            /* молочный */
+    --bg-soft: #f5efe5;       /* светло-бежевый для секций */
+    --bg-card: #ffffff;       /* белая карточка */
+    --bg-card-soft: #fdfaf4;  /* кремовая карточка */
+
+    --border: rgba(48, 38, 28, 0.10);
+    --border-strong: rgba(48, 38, 28, 0.16);
+    --border-accent: rgba(218, 130, 70, 0.32);
+
+    --text: #2c2820;          /* тёмно-серый с тёплым подтоном */
+    --text-secondary: rgba(44, 40, 32, 0.72);
+    --text-muted: rgba(44, 40, 32, 0.48);
+
+    --accent: #da8246;        /* мягкий оранжевый */
+    --accent-soft: #f4d4b8;   /* персиковый */
+    --terracotta: #b85f3e;    /* приглушённая терракота */
+    --olive: #7a8c3f;         /* светлая олива - акцент */
+    --cream: #fdf3df;         /* кремовый */
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  .container { max-width: 1100px; margin: 0 auto; padding: 0 32px; }
+  @media (max-width: 640px) { .container { padding: 0 20px; } }
+
+  .accent-text { color: var(--accent); }
+
+  .warm-bg {
+    position: absolute; inset: 0; pointer-events: none; z-index: -1;
+    background:
+      radial-gradient(at 15% 25%, rgba(244, 212, 184, 0.55) 0px, transparent 55%),
+      radial-gradient(at 85% 15%, rgba(253, 243, 223, 0.65) 0px, transparent 55%),
+      radial-gradient(at 50% 90%, rgba(244, 212, 184, 0.30) 0px, transparent 55%);
+  }
+
+  /* NAV */
+  nav.top {
+    position: sticky; top: 0; z-index: 100;
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    background: rgba(251, 248, 243, 0.85);
+    border-bottom: 1px solid var(--border);
+    height: 64px;
+  }
+  nav.top .container {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  nav.top .brand {
+    display: flex; align-items: center; gap: 10px;
+    font-weight: 700; font-size: 15px; letter-spacing: -0.01em;
+    color: var(--text);
+    text-decoration: none;
+  }
+  nav.top .brand .logo {
+    width: 28px; height: 28px;
+    background: var(--accent);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  nav.top ul {
+    display: flex; list-style: none; gap: 28px;
+  }
+  nav.top ul a {
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 14px;
+    transition: color 0.2s;
+  }
+  nav.top ul a:hover { color: var(--text); }
+  nav.top .cta {
+    padding: 8px 16px;
+    background: var(--accent);
+    color: white;
+    border-radius: 8px;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    transition: background 0.2s;
+  }
+  nav.top .cta:hover { background: var(--terracotta); }
+  @media (max-width: 880px) { nav.top ul { display: none; } }
+
+  /* HERO */
+  .hero {
+    position: relative;
+    padding: 120px 0 80px;
+    overflow: hidden;
+  }
+
+  .pill {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 6px 14px;
+    border: 1px solid var(--border-accent);
+    background: var(--cream);
+    border-radius: 100px;
+    font-size: 13px;
+    color: var(--terracotta);
+    font-weight: 500;
+  }
+
+  .hero h1 {
+    margin-top: 24px;
+    font-size: clamp(36px, 6vw, 64px);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    line-height: 1.08;
+    max-width: 900px;
+  }
+
+  .hero .subtitle {
+    margin-top: 24px;
+    font-size: clamp(16px, 1.6vw, 19px);
+    color: var(--text-secondary);
+    max-width: 680px;
+    line-height: 1.6;
+  }
+
+  .hero .ctas {
+    margin-top: 36px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 11px 20px;
+    border-radius: 9px;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.2s;
+    border: 1px solid transparent;
+  }
+  .btn-primary {
+    background: var(--accent);
+    color: white;
+  }
+  .btn-primary:hover { background: var(--terracotta); }
+  .btn-secondary {
+    background: var(--bg-card);
+    color: var(--text);
+    border-color: var(--border-strong);
+  }
+  .btn-secondary:hover { background: var(--bg-soft); }
+
+  /* SECTIONS */
+  section.block {
+    padding: 80px 0;
+    position: relative;
+  }
+  section.block.alt {
+    background: var(--bg-soft);
+  }
+  section.block:not(:last-child) {
+    border-bottom: 1px solid var(--border);
+  }
+
+  .section-label {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--accent);
+    font-weight: 500;
+  }
+  .section-title {
+    margin-top: 12px;
+    font-size: clamp(28px, 4vw, 42px);
+    font-weight: 700;
+    letter-spacing: -0.025em;
+    line-height: 1.15;
+    max-width: 760px;
+    color: var(--text);
+  }
+  .section-subtitle {
+    margin-top: 16px;
+    font-size: 17px;
+    color: var(--text-secondary);
+    max-width: 700px;
+    line-height: 1.6;
+  }
+
+  .cards-2 {
+    margin-top: 48px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+  .cards-3 {
+    margin-top: 48px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+  @media (max-width: 880px) {
+    .cards-2, .cards-3 { grid-template-columns: 1fr; }
+  }
+
+  .card {
+    padding: 24px;
+    border-radius: 14px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    transition: all 0.2s;
+  }
+  .card:hover { border-color: var(--border-accent); }
+  .card.soft { background: var(--bg-card-soft); }
+  .card h3 {
+    font-size: 17px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    color: var(--text);
+  }
+  .card p {
+    margin-top: 8px;
+    font-size: 14px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+  }
+  .card .icon-wrap {
+    width: 40px; height: 40px;
+    border-radius: 10px;
+    background: var(--cream);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--accent);
+    margin-bottom: 16px;
+  }
+
+  .overview {
+    margin-top: 48px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+  }
+  @media (max-width: 880px) { .overview { grid-template-columns: 1fr; } }
+
+  .overview-block h4 {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 12px;
+  }
+  .overview-block ul { list-style: none; }
+  .overview-block li {
+    padding: 10px 0;
+    border-top: 1px solid var(--border);
+    font-size: 15px;
+    color: var(--text-secondary);
+    display: flex;
+    gap: 10px;
+    align-items: baseline;
+  }
+  .overview-block li::before {
+    content: "·";
+    flex-shrink: 0;
+    color: var(--accent);
+    font-weight: 700;
+    font-size: 20px;
+    line-height: 1;
+  }
+
+  .flow-steps {
+    margin-top: 40px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+  }
+  @media (max-width: 880px) { .flow-steps { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 480px) { .flow-steps { grid-template-columns: 1fr; } }
+
+  .step {
+    padding: 20px;
+    border-radius: 12px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    position: relative;
+  }
+  .step .step-num {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 11px;
+    color: var(--accent);
+    font-weight: 600;
+    letter-spacing: 0.1em;
+  }
+  .step h4 {
+    margin-top: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text);
+  }
+  .step p {
+    margin-top: 8px;
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.55;
+  }
+
+  .mvp-list {
+    margin-top: 40px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+  }
+  @media (max-width: 640px) { .mvp-list { grid-template-columns: 1fr; } }
+
+  .mvp-item {
+    padding: 18px 22px;
+    border-radius: 11px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+  }
+  .mvp-item .check {
+    flex-shrink: 0;
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    background: var(--olive);
+    color: white;
+    display: flex; align-items: center; justify-content: center;
+    margin-top: 1px;
+  }
+  .mvp-item .text strong {
+    display: block;
+    font-size: 14px;
+    color: var(--text);
+    font-weight: 600;
+    margin-bottom: 2px;
+  }
+  .mvp-item .text span {
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.55;
+  }
+
+  .stack {
+    margin-top: 40px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+  @media (max-width: 640px) { .stack { grid-template-columns: 1fr; } }
+
+  .stack-row {
+    padding: 16px 20px;
+    border-radius: 10px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+  .stack-row .label {
+    font-size: 12px;
+    color: var(--text-muted);
+    font-family: "JetBrains Mono", monospace;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+  .stack-row .value {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text);
+  }
+
+  .role-list {
+    margin-top: 40px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+  @media (max-width: 880px) { .role-list { grid-template-columns: 1fr; } }
+
+  .future-note {
+    margin-top: 32px;
+    padding: 18px 22px;
+    border-radius: 12px;
+    background: var(--cream);
+    border: 1px solid var(--border-accent);
+    font-size: 14px;
+    color: var(--text-secondary);
+    line-height: 1.55;
+  }
+  .future-note strong { color: var(--terracotta); font-weight: 600; }
+
+  .future-list {
+    margin-top: 24px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+  @media (max-width: 640px) { .future-list { grid-template-columns: 1fr; } }
+
+  .future-item {
+    padding: 14px 18px;
+    border-radius: 10px;
+    background: var(--bg-card);
+    border: 1px dashed var(--border-strong);
+    font-size: 14px;
+    color: var(--text-secondary);
+    line-height: 1.55;
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+  }
+  .future-item::before {
+    content: "→";
+    color: var(--accent);
+    font-weight: 600;
+    flex-shrink: 0;
+  }
+
+  /* FOOTER */
+  footer.bottom {
+    border-top: 1px solid var(--border);
+    padding: 60px 0 40px;
+    background: var(--bg-soft);
+  }
+  .footer-grid {
+    display: grid;
+    grid-template-columns: 1.5fr 2fr;
+    gap: 40px;
+    align-items: center;
+  }
+  @media (max-width: 720px) { .footer-grid { grid-template-columns: 1fr; } }
+
+  .footer-grid h3 {
+    font-size: 24px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--text);
+  }
+  .footer-grid p {
+    margin-top: 8px;
+    color: var(--text-secondary);
+    font-size: 14px;
+  }
+  .contacts {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .contact-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 18px;
+    border-radius: 10px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    color: var(--text);
+    text-decoration: none;
+    font-size: 14px;
+    transition: all 0.2s;
+  }
+  .contact-link:hover {
+    border-color: var(--border-accent);
+    background: var(--cream);
+  }
+  .contact-link svg { color: var(--accent); flex-shrink: 0; }
+  .contact-link strong { font-weight: 500; }
+
+  .footer-meta {
+    margin-top: 40px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+    font-size: 12px;
+    color: var(--text-muted);
+    text-align: center;
+  }
+
+  .reveal {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s, transform 0.6s;
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+</style>
+</head>
+<body>
+
+<!-- TOP NAV -->
+<nav class="top">
+  <div class="container">
+    <a href="#hero" class="brand">
+      <div class="logo">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M16.5 9.4 7.55 4.24"/><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg>
+      </div>
+      Продуктовый кейс
+    </a>
+    <ul>
+      <li><a href="#about">О продукте</a></li>
+      <li><a href="#how">Как работает</a></li>
+      <li><a href="#mvp">MVP</a></li>
+      <li><a href="#stack">Стек</a></li>
+      <li><a href="#role">Моя роль</a></li>
+      <li><a href="#future">Развитие</a></li>
+    </ul>
+    <a href="#footer" class="cta">Контакты</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section id="hero" class="hero">
+  <div class="warm-bg"></div>
+
+  <div class="container">
+    <div class="pill">Продуктовый кейс · MVP в&nbsp;разработке</div>
+
+    <h1>
+      <span class="accent-text">B2B-платформа</span> для&nbsp;юридических лиц пищевой&nbsp;индустрии
+    </h1>
+
+    <p class="subtitle">
+      Помогает производствам и&nbsp;поставщикам находить друг&nbsp;друга. Доступ к&nbsp;базе участников открывается после регистрации и&nbsp;проверки документов. Текущий фокус: рынок РФ.
+    </p>
+
+    <div class="ctas">
+      <a href="#about" class="btn btn-primary">К&nbsp;кейсу</a>
+      <a href="#footer" class="btn btn-secondary">Контакты</a>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT / WHAT -->
+<section id="about" class="block">
+  <div class="container">
+    <div class="section-label">01 · Что это</div>
+    <h2 class="section-title">B2B-платформа для&nbsp;поиска проверенных партнёров</h2>
+    <p class="section-subtitle">
+      Платформа объединяет две&nbsp;категории участников и&nbsp;помогает им&nbsp;найти друг&nbsp;друга через фильтры. Работает только с&nbsp;юридическими лицами.
+    </p>
+
+    <div class="cards-2">
+      <div class="card soft">
+        <div class="icon-wrap">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M5 21V7l8-4v18"/><path d="M19 21V11l-6-4"/></svg>
+        </div>
+        <h3>Пищевые производства</h3>
+        <p>Компании, выпускающие продукты питания разной специализации. Используют платформу для&nbsp;поиска поставщиков сырья, ингредиентов, упаковки, оборудования и&nbsp;других решений.</p>
+      </div>
+
+      <div class="card soft">
+        <div class="icon-wrap">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg>
+        </div>
+        <h3>Поставщики</h3>
+        <p>Компании, поставляющие сырьё, ингредиенты, оборудование, комплектующие и&nbsp;другие решения для&nbsp;пищевых производств. Используют платформу для&nbsp;выхода на&nbsp;целевых заказчиков.</p>
+      </div>
+    </div>
+
+    <div class="overview">
+      <div class="overview-block">
+        <h4>Какую задачу решает</h4>
+        <ul>
+          <li>Поиск проверенного контрагента в&nbsp;закрытой среде</li>
+          <li>Доступ к&nbsp;участникам только после регистрации и&nbsp;верификации</li>
+          <li>Отбор по&nbsp;ключевым параметрам через фильтры</li>
+        </ul>
+      </div>
+      <div class="overview-block">
+        <h4>Кто пользуется</h4>
+        <ul>
+          <li>Юридические лица в&nbsp;пищевой индустрии</li>
+          <li>Категории: производства и&nbsp;поставщики</li>
+          <li>Сейчас работает с&nbsp;РФ-рынком</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROBLEM -->
+<section class="block alt">
+  <div class="container">
+    <div class="section-label">02 · Проблема</div>
+    <h2 class="section-title">Поиск надёжного контрагента в&nbsp;B2B-сегменте затруднён</h2>
+    <p class="section-subtitle">
+      Тезисы основаны на&nbsp;custdev-интервью с&nbsp;представителями целевой аудитории.
+    </p>
+
+    <div class="cards-3">
+      <div class="card">
+        <h3>Проверка занимает время</h3>
+        <p>Подтверждение существования компании, проверка документов и&nbsp;реквизитов выполняются вручную, по&nbsp;разным каналам.</p>
+      </div>
+      <div class="card">
+        <h3>Нет закрытой среды для&nbsp;B2B</h3>
+        <p>В&nbsp;открытых каталогах смешаны верифицированные и&nbsp;неверифицированные участники. Это снижает доверие к&nbsp;поиску.</p>
+      </div>
+      <div class="card">
+        <h3>Сложно фильтровать по&nbsp;параметрам</h3>
+        <p>Поиск контрагента под&nbsp;конкретный регион, тип продукции или&nbsp;специализацию требует ручного перебора.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section id="how" class="block">
+  <div class="container">
+    <div class="section-label">03 · Как работает</div>
+    <h2 class="section-title">Сценарий пользователя</h2>
+    <p class="section-subtitle">
+      Регистрация и&nbsp;проверка обязательны. После них компания получает доступ к&nbsp;закрытой базе участников.
+    </p>
+
+    <div class="flow-steps">
+      <div class="step">
+        <div class="step-num">01</div>
+        <h4>Регистрация юрлица</h4>
+        <p>Компания создаёт профиль, указывает реквизиты и&nbsp;контактные данные.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">02</div>
+        <h4>Проверка</h4>
+        <p>Сверка с&nbsp;внешними базами и&nbsp;проверка документов компании.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">03</div>
+        <h4>Доступ к&nbsp;базе</h4>
+        <p>После одобрения открывается доступ к&nbsp;каталогу участников и&nbsp;поиску.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">04</div>
+        <h4>Поиск партнёра</h4>
+        <p>Фильтры по&nbsp;региону, типу продукции, специализации, статусу документов.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MVP -->
+<section id="mvp" class="block alt">
+  <div class="container">
+    <div class="section-label">04 · Текущий MVP</div>
+    <h2 class="section-title">Что входит в&nbsp;текущую стадию</h2>
+    <p class="section-subtitle">
+      MVP сознательно узкий: две&nbsp;сущности и&nbsp;ключевые сценарии работы с&nbsp;ними. Часть функций готова, часть в&nbsp;разработке.
+    </p>
+
+    <div class="mvp-list">
+      <div class="mvp-item">
+        <div class="check">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>
+        <div class="text">
+          <strong>Регистрация юридического лица</strong>
+          <span>Создание профиля компании с&nbsp;реквизитами и&nbsp;контактами</span>
+        </div>
+      </div>
+      <div class="mvp-item">
+        <div class="check">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>
+        <div class="text">
+          <strong>Верификация компании и&nbsp;документов</strong>
+          <span>Проверка через внешние базы и&nbsp;сверка с&nbsp;реестрами</span>
+        </div>
+      </div>
+      <div class="mvp-item">
+        <div class="check">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>
+        <div class="text">
+          <strong>Закрытый доступ к&nbsp;базе</strong>
+          <span>Информация об&nbsp;участниках доступна только после регистрации и&nbsp;проверки</span>
+        </div>
+      </div>
+      <div class="mvp-item">
+        <div class="check">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>
+        <div class="text">
+          <strong>Профили поставщиков и&nbsp;производств</strong>
+          <span>Структурированная карточка компании с&nbsp;ключевой информацией</span>
+        </div>
+      </div>
+      <div class="mvp-item">
+        <div class="check">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>
+        <div class="text">
+          <strong>Поиск партнёров и&nbsp;поставщиков</strong>
+          <span>Каталог участников с&nbsp;возможностью находить нужного контрагента</span>
+        </div>
+      </div>
+      <div class="mvp-item">
+        <div class="check">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>
+        <div class="text">
+          <strong>Фильтрация по&nbsp;ключевым параметрам</strong>
+          <span>Регион, тип продукции, специализация, статус документов</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="future-note">
+      <strong>Ограничения MVP:</strong> работа только с&nbsp;юрлицами, рынок РФ, две&nbsp;категории участников (производства и&nbsp;поставщики). Расширение функционала: см.&nbsp;раздел&nbsp;«Дальнейшее развитие».
+    </div>
+  </div>
+</section>
+
+<!-- STACK -->
+<section id="stack" class="block">
+  <div class="container">
+    <div class="section-label">05 · Стек</div>
+    <h2 class="section-title">Технологии текущей стадии</h2>
+    <p class="section-subtitle">
+      Архитектура описана на&nbsp;уровне текущего MVP. Используется готовая инфраструктура без&nbsp;собственных серверов.
+    </p>
+
+    <div class="stack">
+      <div class="stack-row">
+        <span class="label">Frontend</span>
+        <span class="value">Next.js</span>
+      </div>
+      <div class="stack-row">
+        <span class="label">Database</span>
+        <span class="value">PostgreSQL</span>
+      </div>
+      <div class="stack-row">
+        <span class="label">ORM</span>
+        <span class="value">Prisma</span>
+      </div>
+      <div class="stack-row">
+        <span class="label">Hosting / Deploy</span>
+        <span class="value">Vercel</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ROLE -->
+<section id="role" class="block alt">
+  <div class="container">
+    <div class="section-label">06 · Моя роль</div>
+    <h2 class="section-title">Product Manager / Product&nbsp;Owner</h2>
+    <p class="section-subtitle">
+      Команда: 4&nbsp;человека. Зона ответственности: продукт от&nbsp;идеи до&nbsp;запуска.
+    </p>
+
+    <div class="role-list">
+      <div class="card">
+        <h3>Discovery</h3>
+        <p>Custdev-интервью с&nbsp;представителями целевой аудитории, формулирование пользовательских сценариев, определение ключевых функций MVP.</p>
+      </div>
+      <div class="card">
+        <h3>Бэклог и&nbsp;спецификации</h3>
+        <p>Декомпозиция задач, формулирование требований, пользовательские истории, критерии приёмки.</p>
+      </div>
+      <div class="card">
+        <h3>Работа с&nbsp;командой</h3>
+        <p>Координация разработки и&nbsp;дизайна, постановка задач, приёмка результатов.</p>
+      </div>
+      <div class="card">
+        <h3>Тестирование с&nbsp;пользователями</h3>
+        <p>Подготовка сценариев, проведение тестов с&nbsp;тестерами из&nbsp;целевой аудитории, сбор и&nbsp;интерпретация обратной связи.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FUTURE / ROADMAP -->
+<section id="future" class="block">
+  <div class="container">
+    <div class="section-label">07 · Дальнейшее развитие</div>
+    <h2 class="section-title">Возможные направления после&nbsp;MVP</h2>
+    <p class="section-subtitle">
+      Перечисленное ниже не&nbsp;входит в&nbsp;текущий MVP. Это&nbsp;потенциальные направления, которые могут быть реализованы в&nbsp;дальнейшем.
+    </p>
+
+    <div class="future-list">
+      <div class="future-item">Расширение базы участников</div>
+      <div class="future-item">Развитие фильтров и&nbsp;поиска</div>
+      <div class="future-item">Расширение категорий поставщиков и&nbsp;производств</div>
+      <div class="future-item">Углубление проверки юридических лиц</div>
+      <div class="future-item">Развитие личных кабинетов</div>
+      <div class="future-item">Новые сценарии взаимодействия между участниками</div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER / CONTACTS -->
+<footer id="footer" class="bottom">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <div class="section-label">Контакты</div>
+        <h3 style="margin-top: 8px;">Открыт к&nbsp;PM/PO ролям</h3>
+        <p>B2B-продукты, маркетплейсы и&nbsp;платформы.</p>
+      </div>
+
+      <div class="contacts">
+        <a class="contact-link" href="mailto:alex9591995@gmail.com">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          <strong>alex9591995@gmail.com</strong>
+        </a>
+        <a class="contact-link" href="tel:+79777540337">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+          <strong>+7&nbsp;977&nbsp;754-03-37</strong>
+        </a>
+        <a class="contact-link" href="https://t.me/goodrick_95" target="_blank" rel="noopener">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4z"/><path d="M22 2 11 13"/></svg>
+          <strong>@goodrick_95</strong>
+        </a>
+      </div>
+    </div>
+
+    <div class="footer-meta">
+      Продуктовый кейс · 2026
+    </div>
+  </div>
+</footer>
+
+<script>
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.08 });
+  document.querySelectorAll('.block, .cards-2, .cards-3, .flow-steps, .mvp-list, .stack, .role-list, .future-list').forEach((el) => {
+    el.classList.add('reveal');
+    observer.observe(el);
+  });
+</script>
+
+</body>
+</html>
